@@ -1,0 +1,58 @@
+{
+  "name": "For-all-Humans",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./app.js",
+  "scripts": {
+    "dev": "node ./app.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      ".git",
+      "node_modules/**/node_modules"
+    ],
+    "delay": "1",
+    "verbose": true,
+    "events": {},
+    "watch": [
+      "./app.js",
+      "./next.config.js",
+      "./models/**",
+      "./routes/**",
+      "./lib/**",
+      "./DB/**"
+    ]
+  },
+  "author": "Linas Rakauskas",
+  "license": "ISC",
+  "dependencies": {
+    "@zeit/next-css": "latest",
+    "@zeit/next-sass": "latest",
+    "bootstrap": "^4.3.1",
+    "classnames": "latest",
+    "cross-fetch": "latest",
+    "dotenv": "^8.0.0",
+    "express": "latest",
+    "js-cookie": "^2.2.0",
+    "lodash": "latest",
+    "next": "latest",
+    "next-compose-plugins": "latest",
+    "next-cookies": "latest",
+    "next-images": "latest",
+    "next-progressbar": "latest",
+    "next-routes": "latest",
+    "node-sass": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-redux": "latest",
+    "reactstrap": "^8.0.1",
+    "redux": "latest",
+    "redux-devtools-extension": "latest",
+    "redux-persist": "latest",
+    "redux-thunk": "latest",
+    "uuid": "latest"
+  }
+}

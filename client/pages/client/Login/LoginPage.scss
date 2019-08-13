@@ -1,0 +1,45 @@
+ .pageWrapper{
+  &:before, &:after{
+    position: fixed;
+    height: 100%;
+    content: '';
+    background-repeat: no-repeat;
+    z-index: 1;
+  }
+  &:before{
+    background-image: url(/static/assets/img/login/bg_top.png);
+    width: 50%;
+  }
+  &:after{
+    background-image: url(/static/assets/img/login/bg_bottom.png);
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    background-position-y: bottom;
+    background-position-x: right;
+    background-size: contain;
+  }
+  height: 100%;
+  
+  .card-login{
+    z-index: 2;
+    border: 1px solid #2cb1cf38;
+    background-color: transparent;
+    position: relative;
+    box-shadow: 0 6px 10px -4px rgba(0,0,0,.15);
+    z-index: 2;
+    &:before{
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: #ffffffd1;
+      content: '';
+    }
+    > div{
+      position: relative;
+      z-index: 1;
+    }
+  }
+ }
