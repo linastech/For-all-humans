@@ -1,62 +1,98 @@
-import React, { Component } from 'react'
+import React from 'react'
+import uuidv1 from  'uuid/v1'
 import className from 'classnames'
+import { NextSeo } from 'next-seo'
 import {connect} from 'react-redux'
 import { userActions } from '@redux/actions'
-import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap'
+import { Container, Row, Col, Button, Alert, Form, FormGroup, Label, Input, Spinner } from "reactstrap"
+import Layout from '@layouts/Client'
 import CSS from './RegistrationPage.scss'
 
-class RegistrationPage extends Component {
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const {dispatch} = this.props
+class RegistrationPage extends React.Component {
+  state = {
+    data: {}
+  }
+  handleChange = (e) =>{
+    this.setState({ 
+      data: {
+        ...this.state.data,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+  handleSubmit = async(e) =>{
+    e.preventDefault()
 
-    dispatch(userActions.login('admin', 'admin'))
+    await this.props.dispatch(userActions.register(this.state.data))
+
+    this.setState({data: {}})
   }
 
   render() {
+    const {loading, registered, error} = this.props
+
     return (
-      <div className={CSS.pageWrapper}>
-        <Container className="container h-100">
-          <Row className="row align-items-center h-100">
-            <Col md="4" className='col-6 mx-auto'>
-              <CardGroup>
-                <Card className={className('p-4', CSS['card-login'])}>
-                  <CardBody>
-                    <Form onSubmit={this.handleSubmit}>
-                      <h4 className="card-title text-center">Register - (in progress)</h4>
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-user"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" />
-                      </InputGroup>
-                      <InputGroup className="mb-4">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-lock"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" />
-                      </InputGroup>
-                      <Row>
-                        <Col className="text-center">
-                          <Button color="primary" type="submit" className="px-4">Submit</Button>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </CardGroup>
+      <Layout>
+        <NextSeo
+          title="Sign up"
+          description="Sign up page description"
+        />
+        
+        <Container>
+          <Row>
+            <Col className='mt-md-5' sm={{ size: 6, offset: 3 }}>
+              <h4 className="font-weight-normal text-center">Sign Up</h4>
+              
+              <Form onSubmit={this.handleSubmit} className="mb-md-3 d-flex flex-column">
+                <FormGroup>
+                  <Label>Username:</Label>
+                  <Input
+                    onChange={this.handleChange}
+                    type="text"
+                    name="username"
+                    value={this.state.data.username || ''}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Email:</Label>
+                  <Input
+                    onChange={this.handleChange}
+                    type="email"
+                    name="email"
+                    value={this.state.data.email || ''}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Password:</Label>
+                  <Input
+                    onChange={this.handleChange}
+                    type="password"
+                    name="password"
+                    value={this.state.data.password || ''}
+                  />
+                </FormGroup>
+                <Button color="primary" className="align-self-center" disabled={loading}>
+                  {loading && <Spinner className='mr-md-1' size="sm"/> }
+                  {loading ? 'Loading...' : 'Get Started'}
+                </Button>
+              </Form>
+              
+              {/* Error has occured! */}
+              {registered && error != null && <Alert color="danger">{error}</Alert> }
+              {/* User has been registered! */}
+              {registered && error == null && <Alert color="primary">You have successfully registered!</Alert> }
             </Col>
           </Row>
         </Container>
-      </div>
+      </Layout>
     )
   }
 }
 
 export default connect(
-  state => ({})
+  state => ({
+    loading: state.userActions.registration.loading,
+    registered: state.userActions.registration.registered,
+    error: state.userActions.registration.error,
+  })
 )(RegistrationPage)

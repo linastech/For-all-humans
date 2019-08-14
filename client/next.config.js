@@ -37,10 +37,8 @@ module.exports = withPlugins(
   //next.config.js goes here, webpack as well
   {
     env: {
-      
+      API_URL: `https://api.fah.linas.io/api/v1`
     },
-    serverRuntimeConfig: {},
-    publicRuntimeConfig: {},
     distDir: 'build',
     useFileSystemPublicRoutes: false,
     webpack (config, { buildId, dev, isServer, defaultLoaders, webpack }) {

@@ -7,13 +7,19 @@ module.exports = (Router) => {
   }
 
   Router.get('/user/profile', auth, async (req, res, next) => {
-    
-    res.end('Profile')
   })
 
-  Router.get('/user/create', async (req, res, next) => {
-   
-    res.end('made')
+  Router.post('/user/register', async (req, res, next) => {
+    try {
+      const { userData } = req.body
+
+      await DB.user.createUser(userData)
+
+      res.sendStatus(201)
+    }catch(err){
+      // next(err)
+      res.sendStatus(500)
+    }
   })
  
   return this 

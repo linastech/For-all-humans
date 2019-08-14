@@ -87,3 +87,8 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 .vscode/sftp.json
+.VSCodeCounter/details.md
+.vscode/settings.json
+.VSCodeCounter/results.csv
+.VSCodeCounter/results.md
+.VSCodeCounter/results.txt

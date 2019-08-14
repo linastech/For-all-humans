@@ -9,6 +9,9 @@ const callApi = async (args) => {
 
     const params = {
       method: `GET`,
+      headers: {
+        "Content-Type": "application/json"
+      },
       ...config
     }
 
@@ -18,14 +21,18 @@ const callApi = async (args) => {
     const res = await fetch(`${process.env.API_URL}/${endpoint}`, params)
 
     if (res.status >= 400) 
-      return Promise.reject('Bad response from server')
+      return Promise.reject({error: res.statusText, status: res.status})
 
-    const data = await res.json()
+    const contentType = res.headers.get("content-type")
+    let data = null
+    
+    if (contentType && contentType.indexOf("application/json") !== -1)
+      data = await res.json()
 
-    return Promise.resolve(data)
+    return Promise.resolve({data, status: res.status})
   } catch (err) {
     console.log(err)
-    return Promise.reject(`Error fetching ${endpoint}`)
+    return Promise.reject({error: err.message, status: 500})
   }
 }
 
@@ -51,12 +58,14 @@ export default store => next => action => {
   
   return callApi(callAPI).then(
     response => next(actionWith({
-      response,
+      data: response.data,
+      status: response.status,
       type: successType
     })),
-    error => next(actionWith({
+    response => next(actionWith({
       type: failureType,
-      error: error.message || 'Something bad happened'
+      status: response.status,
+      error: response.error
     }))
   )
 }

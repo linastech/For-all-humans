@@ -2,18 +2,40 @@ import React, { Component } from 'react'
 import className from 'classnames'
 import {connect} from 'react-redux'
 import { userActions } from '@redux/actions'
-import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap'
+import { Button, Card, CardBody, Alert, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap'
 import CSS from './LoginPage.scss'
 
 class Login extends Component {
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const {dispatch} = this.props
+  state = {
+    username: '',
+    password: '',
+    error: false
+  }
 
-    dispatch(userActions.login('admin', 'admin'))
+  handleChange = (e) =>{
+    this.setState({ [e.target.name]: e.target.value })
+  }
+
+  handleSubmit = async (event) => {
+    event.preventDefault()
+    
+    const res = await this.props.dispatch(userActions.login(this.state.username, this.state.password))
+
+    let message = ''
+    
+    if(res.status == 401) message = 'Wrong username or password!'
+
+    if(res.status > 200 && res.status != 401) message = res.error 
+
+    this.setState({
+      message: message,
+      error: res.status > 200
+    })
   }
 
   render() {
+    const {message, error} = this.state
+
     return (
       <div className={CSS.pageWrapper}>
         <Container className="container h-100">
@@ -30,7 +52,14 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" />
+                        <Input 
+                          type="text" 
+                          name="username"
+                          placeholder="Email" 
+                          autoComplete="email" 
+                          onChange={this.handleChange}
+                          value={this.state.username || ''}
+                        />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -38,7 +67,14 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" />
+                        <Input 
+                          type="password"
+                          name="password" 
+                          placeholder="Password" 
+                          autoComplete="current-password" 
+                          onChange={this.handleChange}
+                          value={this.state.password || ''}
+                        />
                       </InputGroup>
                       <Row>
                         <Col className="text-center">
@@ -49,6 +85,7 @@ class Login extends Component {
                   </CardBody>
                 </Card>
               </CardGroup>
+              {message != null && <Alert color={error ? 'danger' : 'primary'}>{message}</Alert> }
             </Col>
           </Row>
         </Container>

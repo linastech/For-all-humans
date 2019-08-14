@@ -1,16 +1,19 @@
 import React, {Component} from 'react'
+import { userActions } from '@redux/actions'
+import {getOrCreateStore} from '@redux/with-redux-store'
 import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 
 export const logout  = () => {
+  getOrCreateStore().dispatch(userActions.logout())
   cookie.remove('token')
   Router.push('/login')
 }
 
 export const login  = (token) => {
   cookie.set('token', token)
-  Router.push('/dashboard')
+  Router.push('/profile')
 }
 
 export const withAuth = (AuthComponent) => {

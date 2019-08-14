@@ -8,14 +8,16 @@ class Layout extends React.Component {
     const { children } = this.props
 
     return (
-      <Container>
+      <Container className="d-flex flex-column h-100">
         <Head>
-          <title>For All Humans</title>
           <meta charSet='utf-8' />
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         </Head>
+        
         <NavBar />
+        
         {children}
+        
         <Footer />
       </Container>
     )
